@@ -1,0 +1,69 @@
+<html>
+<head>
+<script type="text/javascript" src="../jquery.js"></script>
+<script type="text/javascript" src="../core.js"></script>
+<script type="text/javascript">
+$(function(){
+	siqi.declare("test.classA", null, {
+		constructor: function(){
+			console.log("classA constructor");
+		},
+		name: "classA"
+	});
+	
+	siqi.declare("test.classB", {
+		constructor: function(){
+			console.log("classB constructor");
+		},
+		name: "classB"
+	});
+	
+	siqi.declare("test.classC", [test.classA, test.classB], {
+		constructor: function(){
+			console.log("classC constructor");
+		},
+		name: "classC"
+	});
+	
+	siqi.declare("test.classD", test.classC, {
+		constructor: function(){
+			console.log("classD constructor");
+		},
+		name: "classD"
+	});
+	console.log("---Test Start---------");
+	console.log("--new test.classA--");
+	iA = new test.classA();
+	console.log("--new test.classB--");
+	iB = new test.classB();
+	console.log("--new test.classC--");
+	iC = new test.classC();
+	console.log("--new test.classD--");
+	iD = new test.classD();
+	console.log("------------");
+	console.log("iA instance of test.classA:" + (iA instanceof test.classA));
+	console.log("iA instance of test.classB:" + (iA instanceof test.classB));
+	console.log("iA instance of test.classC:" + (iA instanceof test.classC));
+	console.log("iA instance of test.classD:" + (iA instanceof test.classD));
+	console.log("------------");
+	console.log("iB instance of test.classA:" + (iB instanceof test.classA));
+	console.log("iB instance of test.classB:" + (iB instanceof test.classB));
+	console.log("iB instance of test.classC:" + (iB instanceof test.classC));
+	console.log("iB instance of test.classD:" + (iB instanceof test.classD));
+	console.log("------------");
+	console.log("iC instance of test.classA:" + (iC instanceof test.classA));
+	console.log("iC instance of test.classB:" + (iC instanceof test.classB));
+	console.log("iC instance of test.classC:" + (iC instanceof test.classC));
+	console.log("iC instance of test.classD:" + (iC instanceof test.classD));
+	console.log("------------");
+	console.log("iD instance of test.classA:" + (iD instanceof test.classA));
+	console.log("iD instance of test.classB:" + (iD instanceof test.classB));
+	console.log("iD instance of test.classC:" + (iD instanceof test.classC));
+	console.log("iD instance of test.classD:" + (iD instanceof test.classD));
+	console.log("---Test End---------");
+});
+</script>
+</head>
+<body>
+</body>
+</html>

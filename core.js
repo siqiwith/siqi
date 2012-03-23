@@ -1,5 +1,5 @@
 var siqi = siqi || {};
-(function($, siqi, undefined){
+(function($, siqi, g, undefined){
 	/**
 	 * @param baseClasses
 	 * The base class of the class to be declared. Can be a single function or an array of functions.
@@ -8,22 +8,41 @@ var siqi = siqi || {};
 	 * @param classDefinition
 	 * The class definition includes class properties, methods. 
 	 */
-	siqi.declare = function(baseClasses, classDefinition){
+	siqi.declare = function(className, baseClasses, classDefinition){
+		// Use baseClasses as classDefinition if only two params feeded.
+		if(!classDefinition){
+			classDefinition = baseClasses;
+			baseClasses = null;
+		}
+		
 		baseClasses = $.isArray(baseClasses) ? baseClasses : baseClasses ? [baseClasses] : [];
-		var constructor = classDefinition["constructor"]
+		// TODO: Check whether className contain illegal characters.
+		var namespaces = className.split(".");
+		if(!namespaces.length){
+			return null;
+		}
+		var classObj = g;
+		var packageLength = namespaces.length - 1;
+		// Build up the packages for the class
+		for(var i = 0; i < packageLength; i++){
+			classObj[namespaces[i]] = classObj[namespaces[i]] || {};
+			classObj = classObj[namespaces[i]];
+		}
+		
+		var realConstructor = classDefinition["constructor"]
 		var superClass = baseClasses[0];
-		var classObj = function(){
+		var constructor = function(){
 			//Call parent constructors
 			if(superClass){
 				superClass.apply(this, arguments);
 			}
 			//Call self constructor
-			constructor.apply(this, arguments);
+			realConstructor.apply(this, arguments);
 		};
 		var fakeConstructor = new Function();
 		classDefinition["superClass"] = superClass;
 		if(!superClass){
-			baseClasses[0] = classObj;
+			baseClasses[0] = constructor;
 		}
 		var mixins = $.map(baseClasses, function(baseClass){
 			fakeConstructor.prototype = baseClass.prototype;
@@ -33,8 +52,8 @@ var siqi = siqi || {};
 		});
 		mixins.unshift(true);
 		mixins.push(classDefinition);
-		classObj.prototype = $.extend.apply(this, mixins);
-
-		return classObj;
+		constructor.prototype = $.extend.apply(this, mixins);
+		classObj[namespaces[packageLength]] = constructor;
+		return constructor;
 	};
-})(jQuery, siqi);
+})(jQuery, siqi, window);
