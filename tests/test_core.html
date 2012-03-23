@@ -2,68 +2,84 @@
 <head>
 <script type="text/javascript" src="../jquery.js"></script>
 <script type="text/javascript" src="../core.js"></script>
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<style type="text/css">
+	@import "qunit/qunit.css";
+</style>
 <script type="text/javascript">
 $(function(){
-	siqi.declare("test.classA", null, {
-		constructor: function(){
-			console.log("classA constructor");
-		},
-		name: "classA"
+	module("core");
+	
+	test("Declare class with superClass=null", function () {
+		expect(2);
+		siqi.declare("test.ClassA", null, {
+			constructor: function(){
+				console.log("classA constructor");
+			},
+			name: "classA"
+		});
+		var instanceA = new test.ClassA();
+		ok(test.ClassA, "test.classA declared!" );
+		ok(instanceA instanceof test.ClassA, "Prototype chain of test.ClassA instance is correct!" );
 	});
 	
-	siqi.declare("test.classB", {
-		constructor: function(){
-			console.log("classB constructor");
-		},
-		name: "classB"
+	test("Declare class without superClass", function () {
+		expect(2);
+		siqi.declare("test.ClassA", {
+			constructor: function(){
+				console.log("classA constructor");
+			},
+			name: "classA"
+		});
+		var instanceA = new test.ClassA();
+		ok(test.ClassA, "test.classA declared!" );
+		ok(instanceA instanceof test.ClassA, "Prototype chain of test.ClassA instance is correct!" );
 	});
 	
-	siqi.declare("test.classC", [test.classA, test.classB], {
-		constructor: function(){
-			console.log("classC constructor");
-		},
-		name: "classC"
+	test("Check class inheriteance", function () {
+		expect(2);
+		siqi.declare("test.ClassA", {
+			constructor: function(){
+				console.log("classA constructor");
+			},
+			name: "ClassA"
+		});
+		siqi.declare("test.ClassB", {
+			constructor: function(){
+				console.log("classB constructor");
+			},
+			name: "ClassB"
+		});
+		siqi.declare("test.ClassC", [test.ClassA, test.ClassB], {
+			constructor: function(){
+				console.log("classC constructor");
+			},
+			name: "ClassC"
+		});
+		siqi.declare("test.ClassD", test.ClassC, {
+			constructor: function(){
+				console.log("classC constructor");
+			},
+			name: "ClassD"
+		});
+		var instanceA = new test.ClassA();
+		var instanceB = new test.ClassB();
+		var instanceC = new test.ClassC();
+		var instanceD = new test.ClassD();
+		ok((instanceC instanceof test.ClassA) && !(instanceC instanceof test.ClassB) 
+			&& !(instanceC instanceof test.ClassD), "Prototype chain of test.ClassC instance is correct!" );
+		ok((instanceD instanceof test.ClassA) && (instanceD instanceof test.ClassC) 
+			&&!(instanceC instanceof test.ClassB), "Prototype chain of test.ClassD instance is correct!" );
 	});
-	
-	siqi.declare("test.classD", test.classC, {
-		constructor: function(){
-			console.log("classD constructor");
-		},
-		name: "classD"
-	});
-	console.log("---Test Start---------");
-	console.log("--new test.classA--");
-	iA = new test.classA();
-	console.log("--new test.classB--");
-	iB = new test.classB();
-	console.log("--new test.classC--");
-	iC = new test.classC();
-	console.log("--new test.classD--");
-	iD = new test.classD();
-	console.log("------------");
-	console.log("iA instance of test.classA:" + (iA instanceof test.classA));
-	console.log("iA instance of test.classB:" + (iA instanceof test.classB));
-	console.log("iA instance of test.classC:" + (iA instanceof test.classC));
-	console.log("iA instance of test.classD:" + (iA instanceof test.classD));
-	console.log("------------");
-	console.log("iB instance of test.classA:" + (iB instanceof test.classA));
-	console.log("iB instance of test.classB:" + (iB instanceof test.classB));
-	console.log("iB instance of test.classC:" + (iB instanceof test.classC));
-	console.log("iB instance of test.classD:" + (iB instanceof test.classD));
-	console.log("------------");
-	console.log("iC instance of test.classA:" + (iC instanceof test.classA));
-	console.log("iC instance of test.classB:" + (iC instanceof test.classB));
-	console.log("iC instance of test.classC:" + (iC instanceof test.classC));
-	console.log("iC instance of test.classD:" + (iC instanceof test.classD));
-	console.log("------------");
-	console.log("iD instance of test.classA:" + (iD instanceof test.classA));
-	console.log("iD instance of test.classB:" + (iD instanceof test.classB));
-	console.log("iD instance of test.classC:" + (iD instanceof test.classC));
-	console.log("iD instance of test.classD:" + (iD instanceof test.classD));
-	console.log("---Test End---------");
 });
 </script>
 </head>
 <body>
+	<h1 id="qunit-header">siqi core Test</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
 </body>
 </html>
