@@ -5,6 +5,9 @@ var siqi = siqi || {};
 	 * @name siqi.MonthView
 	 * @augments siqi.View
 	 */
-	var MonthView = siqi.MonthView = siqi.declare(siqi.View, {
+	siqi.declare("siqi.calendar.MonthView", siqi.calendar.View, {
+		render: function(){
+			$("<div style=\"width: 100px; height: 100px; background: blue;\"></div>").appendTo(this.option("calendar").element);
+		}
 	});
 })(jQuery, siqi);

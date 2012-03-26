@@ -2,17 +2,29 @@ var siqi = siqi || {};
 /**
  * Require
  * -core.js
+ * -_optionMixin.js
  */
 (function($, siqi, undefined){
+	/**
+	 * @class Options for siqi.calendar.Calendar
+	 * @name siqi.calendar.Calendar.options
+	 */
 	var defaultOptions = {
-		name: "siqi.Calendar"
+		/**
+		 *  @property {string} currentView Alias of the currentView of the Calendar
+		 */
+		currentView: "MonthView",
+		/**
+		 *  @property {object} A hash contains all available View plugins.
+		 */
+		views: {}
 	};
 	
 	/**
 	 * @class Siqi Calendar
-	 * @name siqi.Calendar
+	 * @name siqi.calendar.Calendar
 	 */
-	var Calendar = siqi.Calendar = siqi.declare(null, {
+	var Calendar = siqi.declare("siqi.calendar.Calendar", [null, siqi._optionMixin], {
 		constructor: function(options, element){
 			if(arguments.length){
 				this._createWidget(options, element);
@@ -22,10 +34,10 @@ var siqi = siqi || {};
 		/**
 		 * @property {string} name The name of the widget. Should never be changed
 		 */
-		name: defaultOptions.name,
+		name: "siqi.calendar.Calendar",
 		
 		/**
-		 * @property {siqi.View} currentView Current view of the calendar.
+		 * @property {siqi.calendar.View} currentView Current view of the calendar.
 		 */
 		currentView: null,
 		
@@ -49,8 +61,16 @@ var siqi = siqi || {};
 		 * Create the widget
 		 */
 		_create: function(){
+			// Add default views
+			this.option({
+				views: {
+					"MonthView": new siqi.calendar.MonthView({
+									calendar: this
+								})
+				}
+			});
+			
 			this.render();
-			$("<div style=\"width: 100px; height: 100px; background: blue;\"></div>").appendTo(this.element);
 		},
 		
 		/**
@@ -65,49 +85,9 @@ var siqi = siqi || {};
 		 * Render the current view
 		 */
 		render: function(){
-			//this.currentView.render();
-		},
-		
-		/**
-		 * Get options or set options for widget
-		 */
-		option: function(key, value){
-			var options = key;
-			if(arguments.length === 0){
-				// don't return a reference to the internal hash
-				return $.extend({}, this.options);
-			}
-			if(typeof key === "string"){
-				if(value === undefined){
-					return this.options[key];
-				}
-				options = {};
-				options[key] = value;
-			}
-			this._setOptions(options);
-			return this;
-		},
-		
-		/**
-		 * @private
-		 * Set options for the widget
-		 */
-		_setOptions: function(options){
-			var self = this;
-			$.each(options, function(key, value){
-				self._setOption(key, value);
-			});	
-			return this;
-		},
-		
-		/**
-		 * @private
-		 * Set option
-		 * TODO add mapping for _setXXX method
-		 */
-		_setOption: function(key, value){
-			this.options[key] = value;
-			return this;
+			var options = this.option();
+			var mainView = options["views"][options["currentView"]];
+			mainView.render();
 		},
 		
 		/**
@@ -132,7 +112,7 @@ var siqi = siqi || {};
 	$.fn.siqicalendar = function(options){
 		// Register the widget plugin in the same way as jQuery UI widget does
 		var isMethodCall = typeof options === "string",
-			name = defaultOptions.name,
+			name = "siqi.calendar.Calendar",
 			args = Array.prototype.slice.call(arguments, 1),
 			returnValue = this;
 		

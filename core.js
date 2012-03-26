@@ -108,4 +108,26 @@ var siqi = siqi || {};
 		}
 		return constructor;
 	};
+	
+	/**
+	 * Return the class by the given class name.
+	 * @param {string} className (Optional)Name of the class.
+	 * @example
+	 * siqi.getClass("namespace.className");
+	 */
+	siqi.getClass = function(className){
+		// Build up the packages for the class
+		var namespaces = className.split(".");
+		var classObj = g, packagePath = "window";
+		for(var i = 0; i < namespaces.length; i++){
+			parentObj = classObj;
+			classObj = classObj[namespaces[i]];
+			if(!classObj){
+				console.error(namespaces[i] + " is not defined in " + packagePath);
+				return false;
+			}
+			packagePath = i > 0 ? packagePath + "." + namespaces[i] : namespaces[i];
+		}
+		return classObj;
+	};
 })(jQuery, siqi, window);

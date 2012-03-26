@@ -8,12 +8,16 @@ var siqi = siqi || {};
 	 * @class Basic View code for all views
 	 * @name siqi.View
 	 */
-	var View = siqi.View = siqi.declare(null, {
-		constructor: function(args){
-			console.log("args***");
-			console.log(args);
-			console.log("***");
-			this._create();
+	siqi.declare("siqi.calendar.View", [null, siqi._optionMixin],
+	/** @lends siqi.View.prototype */
+	{
+		/**
+		 * @property {siqi.calendar.Calendar} Which calendar the view is attached to
+		 */
+		calendar: null,
+		
+		constructor: function(options){
+			this.option(options);
 		},
 		/**
 		 * @private
