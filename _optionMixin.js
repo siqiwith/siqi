@@ -12,15 +12,18 @@ var siqi = siqi || {};
 			var options = key;
 			if(arguments.length === 0){
 				// don't return a reference to the internal hash
-				return $.extend({}, this.options);
+				//return $.extend({}, this.options);
+				return false;
 			}
 			if(typeof key === "string"){
 				if(value === undefined){
-					return this.options[key];
+				// Get single attribute
+					return this[key];
 				}
 				options = {};
 				options[key] = value;
 			}
+			// Set attributes
 			this._setOptions(options);
 			return this;
 		},
@@ -28,6 +31,7 @@ var siqi = siqi || {};
 		/**
 		 * @private
 		 * Set options for the class
+		 * TODO add mapping for _setXXX method
 		 */
 		_setOptions: function(options){
 			var self = this;
@@ -41,11 +45,10 @@ var siqi = siqi || {};
 		/**
 		 * @private
 		 * Set option
-		 * TODO add mapping for _setXXX method
 		 */
 		_setOption: function(key, value){
-			this.options[key] = value;
+			this[key] = value;
 			return this;
-		},
+		}
 	});
 })(jQuery, siqi);

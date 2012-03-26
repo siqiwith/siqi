@@ -6,54 +6,54 @@ var siqi = siqi || {};
  */
 (function($, siqi, undefined){
 	/**
-	 * @class Options for siqi.calendar.Calendar
-	 * @name siqi.calendar.Calendar.options
-	 */
-	var defaultOptions = {
-		/**
-		 *  @property {string} currentView Alias of the currentView of the Calendar
-		 */
-		currentView: "MonthView",
-		/**
-		 *  @property {object} A hash contains all available View plugins.
-		 */
-		views: {}
-	};
-	
-	/**
 	 * @class Siqi Calendar
 	 * @name siqi.calendar.Calendar
 	 */
 	var Calendar = siqi.declare("siqi.calendar.Calendar", [null, siqi._optionMixin], {
-		constructor: function(options, element){
-			if(arguments.length){
-				this._createWidget(options, element);
-			}
-		},
-		
 		/**
 		 * @property {string} name The name of the widget. Should never be changed
 		 */
 		name: "siqi.calendar.Calendar",
 		
 		/**
-		 * @property {siqi.calendar.View} currentView Current view of the calendar.
+		 *  @property {Date} currentDate Current date.
 		 */
-		currentView: null,
+		currentDate: new Date(),
 		
-		_createWidget: function(options, element){
-			$.data(element, this.name, this);
-			this.element = $(element);
-			this.options = $.extend(true, {},
-				defaultOptions,
-				options);
-	
-			var self = this;
-			this.element.on( "remove." + this.name, function() {
-				self.destroy();
-			});
-			this._create();
-			this._init();
+		/**
+		 * @property {string} currentView Alias of the currentView of the Calendar
+		 */
+		currentView: "MonthView",
+		
+		/**
+		 * @property {object} views A hash contains all available View plugins.
+		 */
+		views: null,
+		
+		/**
+		 * @property {number} currentMonth Current month, 0-11.
+		 */
+		currentMonth: 0,
+		
+		/**
+		 * @property {number} currentYear Current year.
+		 */
+		currentYear: 2010,
+		
+		/**
+		 * @property {array} daysInMonth Days in each Month.
+		 */
+		//daysInMonth: [31, 28,29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+		
+		/**
+		 * @property {array} weekDays Days in a week.
+		 */
+		weekDays: ["Sunday", "Monday", "Tuesday", "Wendnesday", "Thursday", "Friday", "Saturday"],
+		
+		constructor: function(options, element){
+				if(arguments.length){
+					this._createWidget(options, element);
+				}
 		},
 		
 		/**
@@ -61,16 +61,34 @@ var siqi = siqi || {};
 		 * Create the widget
 		 */
 		_create: function(){
+			// Set up attributes
+			this.currentMonth = this.currentDate.getMonth();
+			this.currentYear = this.currentDate.getFullYear();
+			this.daysInMonth = [31, this.currentYear % 4 ? 28 : 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+			
 			// Add default views
 			this.option({
 				views: {
 					"MonthView": new siqi.calendar.MonthView({
-									calendar: this
-								})
+						calendar: this
+					})
 				}
 			});
 			
 			this.render();
+		},
+		
+		_createWidget: function(options, element){
+			$.data(element, this.name, this);
+			this.element = $(element);
+			this.option($.extend(true, {}, options));
+	
+			var self = this;
+			this.element.on( "remove." + this.name, function() {
+				self.destroy();
+			});
+			this._create();
+			this._init();
 		},
 		
 		/**
@@ -85,8 +103,7 @@ var siqi = siqi || {};
 		 * Render the current view
 		 */
 		render: function(){
-			var options = this.option();
-			var mainView = options["views"][options["currentView"]];
+			var mainView = this.views[this.currentView];
 			mainView.render();
 		},
 		

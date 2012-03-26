@@ -18,6 +18,7 @@ var siqi = siqi || {};
 		
 		constructor: function(options){
 			this.option(options);
+			this._create(options);
 		},
 		/**
 		 * @private

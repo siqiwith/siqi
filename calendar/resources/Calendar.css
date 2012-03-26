@@ -1,0 +1,41 @@
+.monthViewMonth, .monthViewHeader{
+	width: 100%;
+}
+.monthViewWeekDay, .monthViewHeaderCell{
+	width: 14%;
+	border: 1px solid black;
+	display: inline-block;
+	*display: inline;
+	text-align: center;
+}
+
+.monthViewWeek{
+	height: 20px;
+}
+
+.monthViewWeekDay{
+	height: 100%;
+}
+
+.monthViewPreMonth, .monthViewNexMonth{
+	color: gray;
+}
+
+.monthViewHeaderBar{
+	height: 20px;
+	position: relative;
+}
+
+.monthViewPreButton, .monthViewNexButton{
+	position: absolute;
+	cursor: pointer;
+}
+
+.monthViewLabel{
+	text-align: center;
+}
+
+.monthViewNexButton{
+	right: 20px;
+	top: 0;
+}
