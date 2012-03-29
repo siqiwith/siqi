@@ -9,10 +9,11 @@ var siqi = siqi || {};
 	 * @name siqi.View
 	 */
 	siqi.declare("siqi.calendar.View", [null, siqi._optionMixin],
-	/** @lends siqi.View.prototype */
+	/** @lends siqi.calendar.View.prototype */
 	{
 		/**
-		 * @property {siqi.calendar.Calendar} Which calendar the view is attached to
+		 * @type siqi.calendar.Calendar}
+		 * Which calendar the view is attached to
 		 */
 		calendar: null,
 		
@@ -20,6 +21,7 @@ var siqi = siqi || {};
 			this.option(options);
 			this._create(options);
 		},
+		
 		/**
 		 * @private
 		 * Set the options
@@ -27,11 +29,13 @@ var siqi = siqi || {};
 		_create: function(options){
 			console.log("create");
 		},
+		
 		/**
 		 * Render the view
 		 */
 		render: function(){
 		},
+		
 		/**
 		 * Destory the view
 		 */

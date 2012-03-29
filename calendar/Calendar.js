@@ -9,51 +9,79 @@ var siqi = siqi || {};
 	 * @class Siqi Calendar
 	 * @name siqi.calendar.Calendar
 	 */
-	var Calendar = siqi.declare("siqi.calendar.Calendar", [null, siqi._optionMixin], {
+	var Calendar = siqi.declare("siqi.calendar.Calendar", [null, siqi._optionMixin],
+	/**@lends siqi.calendar.Calendar.prototype*/
+	{
 		/**
-		 * @property {string} name The name of the widget. Should never be changed
+		 * @type String
+		 * Name of the widget. Should never be changed
 		 */
 		name: "siqi.calendar.Calendar",
 		
 		/**
-		 *  @property {Date} currentDate Current date.
+		 * @type Date
+		 * Current date.
 		 */
 		currentDate: new Date(),
 		
 		/**
-		 * @property {string} currentView Alias of the currentView of the Calendar
+		 * @type String
+		 * Alias of the currentView of the Calendar
 		 */
 		currentView: "MonthView",
 		
 		/**
-		 * @property {object} views A hash contains all available View plugins.
+		 * @type Object
+		 * A hash contains all available View plugins.
 		 */
 		views: null,
 		
 		/**
-		 * @property {number} currentMonth Current month, 0-11.
+		 * @type Integer
+		 * Current day, 1-31.
 		 */
-		currentMonth: 0,
+		date: 1,
 		
 		/**
-		 * @property {number} currentYear Current year.
+		 * @type Integer
+		 * Current month, 0-11.
 		 */
-		currentYear: 2010,
+		month: 0,
 		
 		/**
-		 * @property {array} daysInMonth Days in each Month.
+		 * @type Integer
+		 * Current year.
 		 */
-		//daysInMonth: [31, 28,29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+		year: 2010,
 		
 		/**
-		 * @property {array} weekDays Days in a week.
+		 * @type Array
+		 * Days in each Month. e.g. [31, 28,29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+		 */
+		daysInMonth: null,
+		
+		/**
+		 * @type Integer
+		 * The start day of each week. 0-6
+		 */
+		startDay: 0,
+		
+		/**
+		 * @type Integer
+		 * First day of a month.
+		 */
+		firstDayInMonth: 0,
+		
+		/**
+		 * @type Array
+		 * Days in a week.
 		 */
 		weekDays: ["Sunday", "Monday", "Tuesday", "Wendnesday", "Thursday", "Friday", "Saturday"],
 		
 		constructor: function(options, element){
-				if(arguments.length){
-					this._createWidget(options, element);
-				}
+			if(arguments.length){
+				this._createWidget(options, element);
+			}
 		},
 		
 		/**
@@ -61,18 +89,15 @@ var siqi = siqi || {};
 		 * Create the widget
 		 */
 		_create: function(){
-			// Set up attributes
-			this.currentMonth = this.currentDate.getMonth();
-			this.currentYear = this.currentDate.getFullYear();
-			this.daysInMonth = [31, this.currentYear % 4 ? 28 : 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-			
-			// Add default views
+			// Mixin options and default parameters
 			this.option({
 				views: {
 					"MonthView": new siqi.calendar.MonthView({
 						calendar: this
 					})
-				}
+				},
+				month: this.currentDate.getMonth(),
+				year: this.currentDate.getFullYear()
 			});
 			
 			this.render();
@@ -109,6 +134,7 @@ var siqi = siqi || {};
 		
 		/**
 		 * Destroy the widget
+		 * TODO Not sure need to do the event handler clean.
 		 */
 		destroy: function(){
 			this.element
@@ -118,14 +144,36 @@ var siqi = siqi || {};
 		
 		/**
 		 * Get the node element.
-		 * TODO Do we need the method? or should return the widget instance?
+		 * TODO Do we need the method? Should it return the widget instance?
 		 */
 		widget: function(){
 			return this.element;
+		},
+		
+		_setMonth: function(value){
+			this._set("month", value);
+			this._updateFirstDayInMonth();
+			
+		},
+		
+		_setYear: function(value){
+			this._set("year", value);
+			this._updateFirstDayInMonth();
+			this._updateDaysInMonth();
+		},
+		
+		_updateFirstDayInMonth: function(){
+			var startDate = new Date();
+			startDate.setFullYear(this.year, this.month, 1);
+			this.firstDayInMonth = startDate.getDay();
+		},
+		
+		_updateDaysInMonth: function(){
+			this.daysInMonth = [31, this.year % 4 ? 28 : 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 		}
 	});
 
-	// Register the plugin
+	// Register as JQuery plugin
 	$.fn.siqicalendar = function(options){
 		// Register the widget plugin in the same way as jQuery UI widget does
 		var isMethodCall = typeof options === "string",
