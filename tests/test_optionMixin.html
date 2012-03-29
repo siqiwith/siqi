@@ -1,0 +1,48 @@
+<html>
+<head>
+<script type="text/javascript" src="../jquery.js"></script>
+<script type="text/javascript" src="../core.js"></script>
+<script type="text/javascript" src="../_optionMixin.js"></script>
+<script type="text/javascript" src="qunit/qunit.js"></script>
+<style type="text/css">
+	@import "qunit/qunit.css";
+</style>
+<script type="text/javascript">
+$(function(){
+	module("_optionMixin");
+	
+	test("Test option method", function () {
+		expect(5);
+		siqi.declare("test.ClassA", [null, siqi._optionMixin], {
+			constructor: function(){
+				console.log("classA constructor");
+			},
+			name: "classA",
+			testAttribute: "testAttribute",
+			_setTestAttribute: function(value){
+				console.log("set testAttribute to:" + value);
+				ok(true, "_setTestAttribute is called correctly!");
+				this._set("testAttribute", value);
+			}
+		});
+		var instanceA = new test.ClassA();
+		ok(instanceA.option("testAttribute") == "testAttribute", "Value of \"testAttribute\" is correct!" );
+		instanceA.option("testAttribute", "testAttributeChanged");
+		ok(instanceA.option("testAttribute") == "testAttributeChanged", "Value of \"testAttribute\" is changed correctly!" );
+		instanceA.option({
+			"testAttribute": "testAttributeChangedAgain"
+		});
+		ok(instanceA.option("testAttribute") == "testAttributeChangedAgain", "Value of \"testAttribute\" is changed again correctly!" );
+	});
+});
+</script>
+</head>
+<body>
+	<h1 id="qunit-header">siqi _optionMixin Test</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">test markup, will be hidden</div>
+</body>
+</html>

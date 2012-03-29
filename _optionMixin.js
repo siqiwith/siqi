@@ -11,8 +11,7 @@ var siqi = siqi || {};
 		option: function(key, value){
 			var options = key;
 			if(arguments.length === 0){
-				// don't return a reference to the internal hash
-				//return $.extend({}, this.options);
+				// Do not return all properties of the instance
 				return false;
 			}
 			if(typeof key === "string"){
@@ -31,13 +30,16 @@ var siqi = siqi || {};
 		/**
 		 * @private
 		 * Set options for the class
-		 * TODO add mapping for _setXXX method
 		 */
 		_setOptions: function(options){
 			var self = this;
-			this.options = this.options || {};
 			$.each(options, function(key, value){
-				self._setOption(key, value);
+				var setter = "_set" + key.slice(0, 1).toUpperCase() + key.slice(1);
+				if(self[setter]){
+					self[setter].apply(self, [value]);
+				}else{
+					self._set(key, value);
+				}
 			});	
 			return this;
 		},
@@ -46,7 +48,7 @@ var siqi = siqi || {};
 		 * @private
 		 * Set option
 		 */
-		_setOption: function(key, value){
+		_set: function(key, value){
 			this[key] = value;
 			return this;
 		}
