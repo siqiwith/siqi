@@ -1,0 +1,16 @@
+{
+  "name": "siqi",
+  "version": "0.0.0",
+  "homepage": "https://github.com/siqiwith/siqi",
+  "authors": [
+    "Siqi Zhong"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
