@@ -95,6 +95,13 @@ var siqi = {
 		}
 		
 		return _.template(targetStr, this.valueTemplateSettings);	
+	},
+	
+	isoToDate: function(isoDateStr){
+		var ms = Date.parse(isoDateStr);
+		var result = new Date();
+		result.setTime(ms);
+		return result;
 	}
 }
 window.siqi = siqi;
