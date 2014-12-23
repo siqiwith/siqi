@@ -102,6 +102,26 @@ var siqi = {
 		var result = new Date();
 		result.setTime(ms);
 		return result;
+	},
+	
+	passedTimeString: function(date){
+		var result = "";
+		var currentDate = new Date();
+		var passedTime = currentDate.getTime() - date.getTime();
+		if(passedTime < 0){
+			passedTime = 0;
+		}
+		passedTime = passedTime / 1000;
+		if(passedTime <= 3600){
+			result = "less than 1 hour"
+		}else if(3600 < passedTime && passedTime <= 86400){
+			var hours = Math.ceil(passedTime / 3600);
+			result = hours + " hours ago";
+		}else{
+			var days = Math.ceil(passedTime / 86400);
+			result = days + " days ago";
+		}
+		return result;
 	}
 }
 window.siqi = siqi;
