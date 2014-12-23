@@ -104,7 +104,19 @@ var siqi = {
 		return result;
 	},
 	
-	passedTimeString: function(date){
+	passedTimeString: function(date, nowStr, hoursStr, daysStr){
+		if(!nowStr){
+			nowStr = "less than 1 hour %>";
+		}
+		// Just to keep consistent with underscore template. Does not use template method at all.
+		if(!hoursStr){
+			hoursStr = "<%= hour %> hours ago";
+		}
+		
+		if(!daysStr){
+			daysStr = "<%= days %> days ago";
+		}
+		
 		var result = "";
 		var currentDate = new Date();
 		var passedTime = currentDate.getTime() - date.getTime();
@@ -113,13 +125,13 @@ var siqi = {
 		}
 		passedTime = passedTime / 1000;
 		if(passedTime <= 3600){
-			result = "less than 1 hour"
+			result = nowStr;
 		}else if(3600 < passedTime && passedTime <= 86400){
 			var hours = Math.ceil(passedTime / 3600);
-			result = hours + " hours ago";
+			result = hoursStr.replace("<%= hour %>", hours);
 		}else{
 			var days = Math.ceil(passedTime / 86400);
-			result = days + " days ago";
+			result = daysStr.replace("<%= days %>", days);
 		}
 		return result;
 	}
