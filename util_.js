@@ -106,7 +106,7 @@ var siqi = {
 	
 	passedTimeString: function(date, nowStr, hoursStr, daysStr){
 		if(!nowStr){
-			nowStr = "less than 1 hour %>";
+			nowStr = "less than 1 hour";
 		}
 		// Just to keep consistent with underscore template. Does not use template method at all.
 		if(!hoursStr){
